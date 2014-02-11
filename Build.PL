@@ -17,7 +17,6 @@ my $builder = Module::Build->new(
     },
     requires => {
         'perl' => '5.008001',
-        'Carp' => 0,
         'Digest::MD5' => 0,
         'Class::Accessor::Lite' => 0,
     },

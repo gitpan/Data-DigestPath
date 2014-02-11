@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Digest::MD5 qw//;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Class::Accessor::Lite (
     rw  => [qw/ salt depth delim digest /],
