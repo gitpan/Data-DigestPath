@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Digest::MD5 qw//;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Class::Accessor::Lite (
     rw  => [qw/ salt depth delim digest /],
@@ -50,10 +50,14 @@ Data::DigestPath - the path generator as digest hash
 
 =head1 SYNOPSIS
 
+    use Data::DigestPath
+
     my $dp   = Data::DigestPath->new;
     my $path = $dp->make_path('foo'); # a/c/b/d/acbd18db4cc2f85cedef654fccc4a4d8
 
 There are all options.
+
+    use Data::DigestPath
 
     my $dp = Data::DigestPath->new(
         salt   => 'bar',
