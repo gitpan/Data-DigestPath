@@ -36,7 +36,7 @@
    "provides" : {
       "Data::DigestPath" : {
          "file" : "lib/Data/DigestPath.pm",
-         "version" : "0.03"
+         "version" : "0.04"
       }
    },
    "release_status" : "stable",
@@ -51,5 +51,5 @@
          "url" : "http://github.com/bayashi/Data-DigestPath"
       }
    },
-   "version" : "0.03"
+   "version" : "0.04"
 }

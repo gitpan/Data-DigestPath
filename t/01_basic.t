@@ -21,6 +21,10 @@ use Data::DigestPath;
     is $dp->make_path('mahalo', 4), '8/5/2/2/e/0/8522'; # with salt
     $dp->delim('-');
     is $dp->make_path, 'd-3-4-b-6-c-d34b6c59ef0497d8ff246abd1049352e';
+    $dp->trancate(1);
+    is $dp->make_path, 'd-3-4-b-6-c-59ef0497d8ff246abd1049352e';
+    is $dp->make_path('', 5), 'd-3-4-b-6-c-59ef0';
+    is $dp->make_path('pama', 6), 'd-e-2-4-f-e-275531';
 }
 
 done_testing;

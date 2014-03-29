@@ -3,10 +3,10 @@ use strict;
 use warnings;
 use Digest::MD5 qw//;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Class::Accessor::Lite (
-    rw  => [qw/ salt depth delim digest /],
+    rw  => [qw/ salt depth delim digest trancate /],
 );
 
 sub new {
@@ -18,6 +18,7 @@ sub new {
         delim  => defined $args{delim} ? delete $args{delim} : '/',
         digest => ref $args{digest} eq 'CODE' ? delete $args{digest}
                     : sub { Digest::MD5::md5_hex(@_) },
+        trancate => defined $args{trancate} ? delete $args{trancate} : undef,
     };
 
     bless $opt, $class;
@@ -32,7 +33,9 @@ sub make_path {
     my $path = join(
         $self->delim,
         (split '', $hash)[ 0 .. $self->depth - 1 ],
-        $length ? substr($hash, 0, $length) : $hash
+        $length
+            ? substr($hash, $self->trancate ? $self->depth : 0, $length)
+            : substr($hash, $self->trancate ? $self->depth : 0)
     );
 
     return $path;
@@ -50,22 +53,23 @@ Data::DigestPath - the path generator as digest hash
 
 =head1 SYNOPSIS
 
-    use Data::DigestPath
+    use Data::DigestPath;
 
     my $dp   = Data::DigestPath->new;
     my $path = $dp->make_path('foo'); # a/c/b/d/acbd18db4cc2f85cedef654fccc4a4d8
 
 There are all options.
 
-    use Data::DigestPath
+    use Digest::SHA1 qw//;
+    use Data::DigestPath;
 
     my $dp = Data::DigestPath->new(
         salt   => 'bar',
-        depth  => 4,
-        delim  => '/',
+        depth  => 2,
+        delim  => '-',
         digest => sub { Digest::SHA1::sha1_hex(@_) },
     );
-    warn $dp->make_path
+    warn $dp->make_path('baz'); # 3-2-32b1bf1853e6c39e4a1c3dae941ab7094ff1d293
 
 
 =head1 DESCRIPTION
@@ -90,6 +94,19 @@ the object constructor
 =item C<< delim => $string // '/' >>
 
 =item C<< digest => $code_ref // sub { Digest::MD5::md5_hex(@_) } >>
+
+=item C<< trancate => $bool // undef >>
+
+If you set the trancate param TRUE value, then the last delimited string will trancate(= remove the delimited path strings from last string)
+
+    use Data::DigestPath;
+
+    my $dp = Data::DigestPath->new;
+    warn $dp->make_path; # d/4/1/d/d41d8cd98f00b204e9800998ecf8427e
+
+    $dp->trancate(1);
+    warn $dp->make_path; # d/4/1/d/8cd98f00b204e9800998ecf8427e
+
 
 =back
 
